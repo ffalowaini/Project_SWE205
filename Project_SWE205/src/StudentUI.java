@@ -1,4 +1,3 @@
-package StudentSystem;
 
 import javafx.application.Application;
 import javafx.event.Event;

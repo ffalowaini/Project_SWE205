@@ -60,6 +60,8 @@ public class Student implements Serializable {
 		Course[] list = null;
 		return list;
 	}
+	
+	
 	public int addCourse(int ID,int CRN) throws ClassNotFoundException {
 		Student[] listStudent = getStudent();
 		Course[] listCourse = getCourse();
@@ -95,9 +97,54 @@ public class Student implements Serializable {
 		
 		else if (checkTime(listStudent[indexOfStudent], listCourse[indexOfCourse]))
 			return 105; // time confilct
+		else {
+			listCourse[indexOfCourse].addStudent(ID);
+			listStudent[indexOfStudent].currentCourses.add(CRN);
+			listStudent[indexOfStudent].creditHours +=  listCourse[indexOfCourse].getCredit();
+		}
+		
 		
 		return CRN;
 		
+		
+	}
+	
+	
+	public void deleteCourse(int ID,int CRN) throws ClassNotFoundException {
+		Student[] listStudent = getStudent();
+		Course[] listCourse = getCourse();
+
+		int indexOfStudent = 0;
+		int indexOfCourse = 0;
+
+		for (int i =0 ; i< listCourse.length ; i++) {
+			if (listCourse[i].getCRN() == CRN) {
+				indexOfCourse = i;
+				break;
+			}
+		}
+		
+		for (int i =0 ; i< listStudent.length ; i++) {
+			if (listStudent[i].ID == ID) {
+				indexOfStudent = i;
+				break;
+			}
+		}
+		
+		listCourse[indexOfCourse].deleteStudent(ID);
+		listStudent[indexOfStudent].currentCourses.remove(CRN);
+		listStudent[indexOfStudent].creditHours -=  listCourse[indexOfCourse].getCredit();
+		
+		
+	}
+	
+	
+	public void searchCourse(int ID,int CRN) throws ClassNotFoundException {
+		
+	}
+	
+	
+	public void approvalCourse(String massege,int CRN) throws ClassNotFoundException {
 		
 	}
 	
@@ -145,14 +192,8 @@ public class Student implements Serializable {
 		///************************
 		return true;
 	}
-	// الميثود المطلوبة
-	/*
-	 * public void addStudent (int ID,int SRN) { numOfStudent++;
-	 * studentTakeThisCourse.add(ID); if (numOfStudent == maxNumOfStudent) isOpen =
-	 * false; }
-	 */
 
-	// الي تحت استخدمتها عشان اضيف للفايل
+	
 	public Student(String name, String password, int ID, double GPA, String major, String email, String phoneNumber,
 			ArrayList<Integer> coursesTaken, ArrayList<Integer> currentCourses, int creditHours, int maxHours) {
 		super();
@@ -170,19 +211,11 @@ public class Student implements Serializable {
 
 	}
 
-	/*
-	 * try { ObjectInputStream is = new ObjectInputStream(new
-	 * FileInputStream(fileName)); ArrayList<Student> aa ; aa = (ArrayList<Student>)
-	 * is.readObject(); Student[] xx = new Student[aa.size()]; for(int i =0 ; i<
-	 * aa.size(); i++) { xx[i] = aa.get(i); // System.out.println(xx[i].getInfo());
-	 * } int id = 2016111110; for (int i =0 ; i < xx.length ; i++) { if (xx[i].) }
-	 * is.close();
-	 * 
-	 * } catch (IOException e) { e.printStackTrace(); }
-	 */
-
-	// تتعدل بعدين
 	
+	
+	
+	
+
 	public String getName() {
 		return name;
 	}

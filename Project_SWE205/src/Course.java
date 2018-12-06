@@ -21,11 +21,19 @@ public class Course implements Serializable{
 /**/private boolean state;  
 	//private Exam[] exams;
 	
-	public void addStudent (int ID,int CRN) {
+	public void addStudent (int ID) {
 		numOfStudent++;
 		studentTakeThisCourse.add(ID);
 		if (numOfStudent == maxNumOfStudent)
 			state = false;
+	}
+	
+	
+	public void deleteStudent (int ID) {
+		numOfStudent--;
+		studentTakeThisCourse.remove(ID);
+		if (numOfStudent < maxNumOfStudent)
+			state = true;
 	}
 	
 	public Course(int CRN, String name, int credit, String day, String instructor, int maxNumOfStudent,
