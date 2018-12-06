@@ -6,11 +6,10 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-
-<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <children>
-      <Button layoutX="536.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="94.0" style="-fx-background-color: red;" text="Log Out" textFill="WHITE" />
-      <Button layoutX="442.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="94.0" style="-fx-background-color: gray;" text="back" textFill="WHITE" />
+      <Button layoutX="536.0" mnemonicParsing="false" onAction="#logOutButton" prefHeight="42.0" prefWidth="94.0" style="-fx-background-color: red;" text="Log Out" textFill="WHITE" />
+      <Button layoutX="442.0" mnemonicParsing="false" onAction="#goToRegistrationButton" prefHeight="42.0" prefWidth="94.0" style="-fx-background-color: gray;" text="back" textFill="WHITE" />
       <TextField layoutX="34.0" layoutY="89.0" promptText="search" />
       <Button layoutX="213.0" layoutY="89.0" mnemonicParsing="false" text="Search" />
       <Button layoutX="14.0" layoutY="351.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="77.0" text="Add" />
