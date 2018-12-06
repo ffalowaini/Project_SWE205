@@ -83,7 +83,7 @@ public class Controller {
         try {
 
 
-            Parent root = FXMLLoader.load(getClass().getResource("SearchCourse.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("Approval.fxml"));
             Scene scene = new Scene(root,600,600);
 
             Stage window =(Stage) ( (Node)e.getSource() ).getScene().getWindow() ;
