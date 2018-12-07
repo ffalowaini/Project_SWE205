@@ -1,3 +1,4 @@
+package StudentSystem;
 
 import javafx.application.Application;
 import javafx.event.Event;
@@ -6,7 +7,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -14,10 +17,15 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import sun.awt.windows.ThemeReader;
+
 public class StudentUI extends Application implements EventHandler {
     private Stage window;
     private Button logOut = new Button("Log Out");
     private Button BackButton = new Button("Back");
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -40,9 +48,9 @@ public class StudentUI extends Application implements EventHandler {
         Scanner readFile = new Scanner(new FileInputStream("Menu Buttons.txt"));
         BorderPane pane = new BorderPane();
         VBox box = new VBox();
-        Button[] sideButton = new Button[4];
-
+        logOut.setOnAction(this);
         logOut.setPrefWidth(80);
+        Button[] sideButton = new Button[4];
         for (int i = 0; i < sideButton.length; i++) {
             sideButton[i] = new Button();
             sideButton[i].setText(readFile.nextLine());
@@ -73,15 +81,81 @@ public class StudentUI extends Application implements EventHandler {
 
     @Override
     public void handle(Event event) {
-        Button b = (Button) event.getTarget();
-        if (b.equals("Registration"))
-            window.setScene(RegistrationScene());
+        Button button = (Button) event.getSource();
+        if (button.getText().equals("Registration"))
+            try {
+                window.setScene(RegistrationScene());
+            } catch (FileNotFoundException e) {
+                System.out.println(e.getMessage());
+            }
+
+
+        //To change scene to Home scene from the Registration scene
+        if (button.getText().equals("Back") && window.getTitle().equals("Registration")) {
+            try {
+                window.setScene(homeScene());
+            } catch (FileNotFoundException e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }
 
-    private Scene RegistrationScene() {
+    private Scene RegistrationScene() throws FileNotFoundException {
+        BackButton.setOnAction(this);
+        logOut.setOnAction(this);
+        window.setTitle("Registration");
         BorderPane outerLay = new BorderPane();
+        HBox hBox = new HBox();
+        hBox.getChildren().addAll(BackButton, logOut);
+        outerLay.setTop(hBox);
+        hBox.setAlignment(Pos.TOP_RIGHT);
+        HBox bottomBox = new HBox();
 
-        return new Scene(outerLay,400,400);
+        Scanner readFile = new Scanner(new FileInputStream("RegistrationButton.txt"));
+
+
+        Button[] button = new Button[4];
+        for (int i = 0; i < button.length; i++) {
+            button[i] = new Button();
+            button[i].setText(readFile.nextLine());
+            button[i].setOnAction(this);
+            button[i].setPrefWidth(120);
+            mouseAffect(button[i]);
+            bottomBox.getChildren().add(button[i]);
+        }
+        outerLay.setBottom(bottomBox);
+        bottomBox.setAlignment(Pos.BASELINE_LEFT);
+        //   TableColumn[] tableColumns = new TableColumn[6];
+        // TableView tableView = new TableView();
+
+
+        HBox crnBox = new HBox();
+        TextField[] crnText = new TextField[4];
+        for (int i = 0; i < crnText.length; i++) {
+            crnText[i] = new TextField();
+            crnBox.getChildren().add(crnText[i]);
+
+        }
+        Label crnLabel = new Label("CRN: ");
+        VBox centerBox = new VBox();
+        centerBox.getChildren().addAll(crnLabel, crnBox);
+        outerLay.setCenter(centerBox);
+        centerBox.setAlignment(Pos.CENTER);
+
+        return new Scene(outerLay, 400, 400);
+    }
+
+
+     private Scene searchScene() {
+        BackButton.setOnAction(this);
+        logOut.setOnAction(this);
+        window.setTitle("Search Course");
+        BorderPane outerLay = new BorderPane();
+        HBox hBox = new HBox();
+        hBox.getChildren().addAll(BackButton, logOut);
+        outerLay.setTop(hBox);
+        hBox.setAlignment(Pos.TOP_RIGHT);
+        return new Scene(outerLay, 400, 400);
     }
 }
 
