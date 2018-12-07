@@ -189,7 +189,8 @@ public class Student implements Serializable {
 	}
 	
 	public boolean checkTime(Student student, Course course) {
-		///************************
+		
+		
 		return true;
 	}
 
