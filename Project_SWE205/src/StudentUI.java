@@ -25,12 +25,16 @@ public class StudentUI extends Application implements EventHandler {
     private Button BackButton = new Button("Back");
     private TextField userNam, crnText;
     private PasswordField pass;
-    private Label messageLabel;
+    private Label messageLabel,headerTableLabel;
     private Label[] crnLabel = new Label[4];
     private TextArea messageText;
     private Student students = new Student();
-    private Course course = new Course();
     private Student currentStudent;
+    private Course[] listCourse;
+    private Student[] listStudent;
+    private int indexCurrentStudent;
+    TextField searchFiled;
+    Button searchButton;
 
     public static void main(String[] args) {
         launch(args);
@@ -51,7 +55,6 @@ public class StudentUI extends Application implements EventHandler {
         window.setTitle("Log In");
         BackButton.setOnAction(this);
         logOut.setOnAction(this);
-        Stage dialog = new Stage();
 
 
         Label userName = new Label(String.format("%9s", "ID:    \t"));
@@ -112,7 +115,10 @@ public class StudentUI extends Application implements EventHandler {
         return new Scene(pane, 400, 400);
     }
 
-    private Scene registrationScene() throws FileNotFoundException {
+    private Scene registrationScene() throws FileNotFoundException, ClassNotFoundException {
+        listStudent = students.getStudent();
+        listCourse = students.getCourse();
+        currentStudent = listStudent[indexCurrentStudent];
         messageLabel.setText("");
         BackButton.setOnAction(this);
         logOut.setOnAction(this);
@@ -156,11 +162,64 @@ public class StudentUI extends Application implements EventHandler {
             crnLabel[i] = new Label();
             crnLabelBox.getChildren().add(crnLabel[i]);
         }
+        VBox tableBox = new VBox();
+        headerTableLabel = new Label();
+        headerTableLabel.setText(String.format("  %-5s\t%-12s\t%s\t%-30s\t%-3s\t%-11s", "CRN", "Course", "Sec", "Instructor", "Day", "Time"));
+        tableBox.getChildren().add(headerTableLabel);
+        Label[] crnTable = new Label[7];
+        for (int i = 0; i < crnTable.length; i++) {
+            crnTable[i] = new Label();
+            tableBox.getChildren().addAll(crnTable[i]);
+        }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        if (currentStudent.getCurrentCourses().size() >= 1) {
+            int crn = currentStudent.getCurrentCourses().get(0);
+            for (int i = 0; i < listCourse.length; i++)
+                if (crn == listCourse[i].getCRN())
+                    crnTable[0].setText(listCourse[i].getInfo());
+        }
+        if (currentStudent.getCurrentCourses().size() >= 2) {
+            int crn = currentStudent.getCurrentCourses().get(1);
+            for (int i = 0; i < listCourse.length; i++)
+                if (crn == listCourse[i].getCRN())
+                    crnTable[1].setText(listCourse[i].getInfo());
+        }
+        if (currentStudent.getCurrentCourses().size() >= 3) {
+            int crn = currentStudent.getCurrentCourses().get(2);
+            for (int i = 0; i < listCourse.length; i++)
+                if (crn == listCourse[i].getCRN())
+                    crnTable[2].setText(listCourse[i].getInfo());
+        }
+        if (currentStudent.getCurrentCourses().size() >= 4) {
+            int crn = currentStudent.getCurrentCourses().get(3);
+            for (int i = 0; i < listCourse.length; i++)
+                if (crn == listCourse[i].getCRN())
+                    crnTable[3].setText(listCourse[i].getInfo());
+        }
+        if (currentStudent.getCurrentCourses().size() >= 5) {
+            int crn = currentStudent.getCurrentCourses().get(4);
+            for (int i = 0; i < listCourse.length; i++)
+                if (crn == listCourse[i].getCRN())
+                    crnTable[4].setText(listCourse[i].getInfo());
+        }
+        if (currentStudent.getCurrentCourses().size() >= 6) {
+            int crn = currentStudent.getCurrentCourses().get(5);
+            for (int i = 0; i < listCourse.length; i++)
+                if (crn == listCourse[i].getCRN())
+                    crnTable[5].setText(listCourse[i].getInfo());
+        }
+        if (currentStudent.getCurrentCourses().size() >= 7) {
+            int crn = currentStudent.getCurrentCourses().get(6);
+            for (int i = 0; i < listCourse.length; i++)
+                if (crn == listCourse[i].getCRN())
+                    crnTable[6].setText(listCourse[i].getInfo());
+        }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
         Label crnLabel = new Label("CRN: ");
         HBox crnBox = new HBox();
         crnBox.getChildren().add(crnLabel);
         VBox centerBox = new VBox();
-        centerBox.getChildren().addAll(crnBox, crnTextBox, crnLabelBox);
+        centerBox.getChildren().addAll(tableBox, crnBox, crnTextBox, crnLabelBox);
         crnBox.setAlignment(Pos.BOTTOM_LEFT);
         outerLay.setCenter(centerBox);
         centerBox.setAlignment(Pos.BOTTOM_CENTER);
@@ -170,6 +229,14 @@ public class StudentUI extends Application implements EventHandler {
 
 
     private Scene searchScene() {
+        try {
+            listStudent = students.getStudent();
+            listCourse = students.getCourse();
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        currentStudent = listStudent[indexCurrentStudent];
         BackButton.setOnAction(this);
         logOut.setOnAction(this);
         BackButton.setPrefWidth(80);
@@ -180,12 +247,15 @@ public class StudentUI extends Application implements EventHandler {
         hBox.getChildren().addAll(BackButton, logOut);
         outerLay.setTop(hBox);
         hBox.setAlignment(Pos.TOP_RIGHT);
-        TextField searchFiled = new TextField();
-        Button searchButton = new Button("Search");
+        searchFiled = new TextField();
+        searchButton = new Button("Search");
         searchButton.setOnAction(this);
         HBox searchBox = new HBox();
+        VBox searchContainer = new VBox();
+
         searchBox.getChildren().addAll(searchButton, searchFiled);
-        outerLay.setCenter(searchBox);
+        searchContainer.getChildren().addAll(searchBox, headerTableLabel, messageLabel);
+        outerLay.setCenter(searchContainer);
         Button addButton = new Button("Add");
         addButton.setOnAction(this);
         outerLay.setBottom(addButton);
@@ -241,12 +311,17 @@ public class StudentUI extends Application implements EventHandler {
         Button button = (Button) event.getSource();
 
         //to Change the scene from The home scene to the registration scene
-        if (button.getText().equals("Registration"))
+        if (button.getText().equals("Registration")) {
+
             try {
                 window.setScene(registrationScene());
+
             } catch (FileNotFoundException e) {
                 System.out.println(e.getMessage());
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
             }
+        }
         //to Change the scene from The registration scene to the search course scene
         if (button.getText().equals("Search Course"))
             window.setScene(searchScene());
@@ -304,19 +379,27 @@ public class StudentUI extends Application implements EventHandler {
 
                 } else if (result[i] == 106) {
                     crnLabel[i].setText(crnTextArray[i].getText() + " :Course has been added");
+                    try {
+                        window.setScene(registrationScene());
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
                 } else if (result[i] == 107) {
                     crnLabel[i].setText(crnTextArray[i].getText() + " :You already have this course");
+                } else if (result[i] == 108) {
+                    crnLabel[i].setText(crnTextArray[i].getText() + " :You entered invalid CRN");
                 }
             }
         }
 
 
         if (button.getText().equals("Log In")) {
-            Student[] listStudent = null;
             try {
                 System.out.println(Arrays.toString(students.getStudent()));
                 listStudent = students.getStudent();
-                Course[] listCourse = students.getCourse();
+                listCourse = students.getCourse();
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -324,15 +407,17 @@ public class StudentUI extends Application implements EventHandler {
             String idEnterd = userNam.getText();
             boolean check = false;
             try {
-                for (Student student : listStudent) {
-                    if (student.getID() == Integer.parseInt(idEnterd))
-                        if (student.getPassword().equals(passwordEntered)) {
-                            currentStudent = student;
+                for (int i = 0; i < listStudent.length; i++) {
+                    if (listStudent[i].getID() == Integer.parseInt(idEnterd))
+                        if (listStudent[i].getPassword().equals(passwordEntered)) {
+                            currentStudent = listStudent[i];
+                            indexCurrentStudent = i;
                             window.setScene(homeScene());
                             check = true;
                             break;
                         }
                 }
+
                 //it will print anyway
                 if (!check) {
                     messageLabel.setText("The username/password is incorrect");
@@ -364,6 +449,8 @@ public class StudentUI extends Application implements EventHandler {
                 window.setScene(registrationScene());
             } catch (FileNotFoundException e) {
                 System.out.println(e.getMessage());
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
             }
         }
         boolean[] checkDelete = new boolean[4];
@@ -383,6 +470,13 @@ public class StudentUI extends Application implements EventHandler {
                 if (!(crnTextArray[i].getText().trim().isEmpty())) {
                     if (checkDelete[i]) {
                         crnLabel[i].setText(crnTextArray[i].getText() + " : Has been deleted");
+                        try {
+                            window.setScene(registrationScene());
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
                     } else {
                         crnLabel[i].setText(crnTextArray[i].getText() + " : You don't have this course");
                     }
@@ -392,6 +486,19 @@ public class StudentUI extends Application implements EventHandler {
 
         }
 
+        if (button.getText().equals("Search")) {
+            if (!(searchFiled.getText().trim().isEmpty())){
+                headerTableLabel.setText(String.format("  %-5s\t%-12s\t%s\t%-30s\t%-3s\t%-11s", "CRN", "Course", "Sec", "Instructor", "Day", "Time"));
+                int crn = Integer.parseInt(searchFiled.getText());
+                for (int i = 0; i < listCourse.length; i++)
+                    if (crn == listCourse[i].getCRN())
+                        messageLabel.setText(listCourse[i].getInfo());
+             //   messageLabel.setText();
+            } else {
+                messageLabel.setText("You have to enter a valid CRN");
+            }
+
+        }
 
         if (button.getText().equals("Send")) {
             if (messageText.getText().trim().isEmpty() || crnText.getText().trim().isEmpty())
@@ -404,6 +511,8 @@ public class StudentUI extends Application implements EventHandler {
                 try {
                     window.setScene(registrationScene());
                 } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
             }

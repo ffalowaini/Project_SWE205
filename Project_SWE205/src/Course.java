@@ -6,167 +6,171 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Course implements Serializable{
+public class Course implements Serializable {
 
-	private int CRN;
-	private String name;
-	private int credit;
-	private String day;
-	private String instructor;
-	private int maxNumOfStudent;
-	private int numOfStudent;
-	private int sectionNum;
-	private ArrayList<Integer> studentTakeThisCourse;
-	private ArrayList<Integer> preRequest;
-/**/private String time;  
-/**/private boolean state;  
-	//private Exam[] exams;
-	
-	public Course() {
-		
-	}
-	
-	public void addStudent (int ID) {
-		numOfStudent++;
-		studentTakeThisCourse.add(ID);
-		if (numOfStudent == maxNumOfStudent)
-			state = false;
-	}
-	
-	
-	public void deleteStudent (int ID) {
-		numOfStudent--;
+    private int CRN;
+    private String name;
+    private int credit;
+    private String day;
+    private String instructor;
+    private int maxNumOfStudent;
+    private int numOfStudent;
+    private int sectionNum;
+    private ArrayList<Integer> studentTakeThisCourse;
+    private ArrayList<Integer> preRequest;
+    /**/private String time;
+    /**/private boolean state;
+    //private Exam[] exams;
 
-		for (int i =0 ; i<studentTakeThisCourse.size() ; i++)
-			if ( ID == studentTakeThisCourse.get(i))
-				studentTakeThisCourse.remove(i);
+    public Course() {
 
-		if (numOfStudent < maxNumOfStudent)
-			state = true;
-	}
-	public Course (int CRN, String name, String day, int sectionNum, String time){
-		this.CRN = CRN;
-		this.name = name;
-		this.day = day;
-		this.sectionNum = sectionNum;
-		this.time = time;
-	}
+    }
 
-	public Course(int CRN, String name, int credit, String day, String instructor, int maxNumOfStudent,
-			int numOfStudent, int sectionNum, ArrayList<Integer> studentTakeThisCourse, ArrayList<Integer> preRequest, String time,
-			boolean state) {
-		this.CRN = CRN;
-		this.name = name;
-		this.credit = credit;
-		this.day = day;
-		this.instructor = instructor;
-		this.maxNumOfStudent = maxNumOfStudent;
-		this.numOfStudent = numOfStudent;
-		this.sectionNum = sectionNum;
-		this.studentTakeThisCourse = studentTakeThisCourse;
-		this.preRequest = preRequest;
-		this.time = time;
-		this.state = state;
-	}
-	
-	
-	public int getCRN() {
-		return CRN;
-	}
+    public void addStudent(int ID) {
+        numOfStudent++;
+        studentTakeThisCourse.add(ID);
+        if (numOfStudent == maxNumOfStudent)
+            state = false;
+    }
 
-	public void setCRN(int cRN) {
-		CRN = cRN;
-	}
 
-	public String getName() {
-		return name;
-	}
+    public void deleteStudent(int ID) {
+        numOfStudent--;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+        for (int i = 0; i < studentTakeThisCourse.size(); i++)
+            if (ID == studentTakeThisCourse.get(i))
+                studentTakeThisCourse.remove(i);
 
-	public int getCredit() {
-		return credit;
-	}
+        if (numOfStudent < maxNumOfStudent)
+            state = true;
+    }
 
-	public void setCredit(int credit) {
-		this.credit = credit;
-	}
+    public Course(int CRN, String name, String day, int sectionNum, String time) {
+        this.CRN = CRN;
+        this.name = name;
+        this.day = day;
+        this.sectionNum = sectionNum;
+        this.time = time;
+    }
 
-	public String getDay() {
-		return day;
-	}
+    public Course(int CRN, String name, int credit, String day, String instructor, int maxNumOfStudent,
+                  int numOfStudent, int sectionNum, ArrayList<Integer> studentTakeThisCourse, ArrayList<Integer> preRequest, String time,
+                  boolean state) {
+        this.CRN = CRN;
+        this.name = name;
+        this.credit = credit;
+        this.day = day;
+        this.instructor = instructor;
+        this.maxNumOfStudent = maxNumOfStudent;
+        this.numOfStudent = numOfStudent;
+        this.sectionNum = sectionNum;
+        this.studentTakeThisCourse = studentTakeThisCourse;
+        this.preRequest = preRequest;
+        this.time = time;
+        this.state = state;
+    }
 
-	public void setDay(String day) {
-		this.day = day;
-	}
 
-	public String getInstructor() {
-		return instructor;
-	}
+    public int getCRN() {
+        return CRN;
+    }
 
-	public void setInstructor(String instructor) {
-		this.instructor = instructor;
-	}
+    public void setCRN(int cRN) {
+        CRN = cRN;
+    }
 
-	public int getMaxNumOfStudent() {
-		return maxNumOfStudent;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setMaxNumOfStudent(int maxNumOfStudent) {
-		this.maxNumOfStudent = maxNumOfStudent;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public int getNumOfStudent() {
-		return numOfStudent;
-	}
+    public int getCredit() {
+        return credit;
+    }
 
-	public void setNumOfStudent(int numOfStudent) {
-		this.numOfStudent = numOfStudent;
-	}
+    public void setCredit(int credit) {
+        this.credit = credit;
+    }
 
-	public int getSectionNum() {
-		return sectionNum;
-	}
+    public String getDay() {
+        return day;
+    }
 
-	public void setSectionNum(int sectionNum) {
-		this.sectionNum = sectionNum;
-	}
+    public void setDay(String day) {
+        this.day = day;
+    }
 
-	public ArrayList<Integer> getStudentTakeThisCourse() {
-		return studentTakeThisCourse;
-	}
+    public String getInstructor() {
+        return instructor;
+    }
 
-	public void setStudentTakeThisCourse(ArrayList<Integer> studentTakeThisCourse) {
-		this.studentTakeThisCourse = studentTakeThisCourse;
-	}
+    public void setInstructor(String instructor) {
+        this.instructor = instructor;
+    }
 
-	public ArrayList<Integer> getPreRequest() {
-		return preRequest;
-	}
+    public int getMaxNumOfStudent() {
+        return maxNumOfStudent;
+    }
 
-	public void setPreRequest(ArrayList<Integer> preRequest) {
-		this.preRequest = preRequest;
-	}
+    public void setMaxNumOfStudent(int maxNumOfStudent) {
+        this.maxNumOfStudent = maxNumOfStudent;
+    }
 
-	public String getTime() {
-		return time;
-	}
+    public int getNumOfStudent() {
+        return numOfStudent;
+    }
 
-	public void setTime(String time) {
-		this.time = time;
-	}
+    public void setNumOfStudent(int numOfStudent) {
+        this.numOfStudent = numOfStudent;
+    }
 
-	public boolean getState() {
-		return state;
-	}
+    public int getSectionNum() {
+        return sectionNum;
+    }
 
-	public void setState(boolean state) {
-		this.state = state;
-	}
-	public String getInfo() {
-		return CRN + " " + name + " " + sectionNum + "  "  ; 
-	}
-	
+    public void setSectionNum(int sectionNum) {
+        this.sectionNum = sectionNum;
+    }
+
+    public ArrayList<Integer> getStudentTakeThisCourse() {
+        return studentTakeThisCourse;
+    }
+
+    public void setStudentTakeThisCourse(ArrayList<Integer> studentTakeThisCourse) {
+        this.studentTakeThisCourse = studentTakeThisCourse;
+    }
+
+    public ArrayList<Integer> getPreRequest() {
+        return preRequest;
+    }
+
+    public void setPreRequest(ArrayList<Integer> preRequest) {
+        this.preRequest = preRequest;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public boolean getState() {
+        return state;
+    }
+
+    public void setState(boolean state) {
+        this.state = state;
+    }
+
+    public String getInfo() {
+        return String.format("  %-5d\t%-12s\t%d\t%-19s\t%-3s\t%-11s", CRN, name, sectionNum, instructor, day, time);
+
+
+    }
+
 }

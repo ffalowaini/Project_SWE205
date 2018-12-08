@@ -87,19 +87,22 @@ public class Student implements Serializable {
 
 
     public int addCourse(int ID, int CRN) throws ClassNotFoundException {
-
+        System.out.println(CRN);
         Student[] listStudent = getStudent();
         Course[] listCourse = getCourse();
-
+        boolean found = false;
         int indexOfStudent = 0;
         int indexOfCourse = 0;
 
         for (int i = 0; i < listCourse.length; i++) {
             if (listCourse[i].getCRN() == CRN) {
                 indexOfCourse = i;
+                found = true;
                 break;
             }
         }
+        if (!found)
+            return 108; // invalid CRN
 
         for (int i = 0; i < listStudent.length; i++) {
             if (listStudent[i].ID == ID) {
@@ -223,9 +226,11 @@ public class Student implements Serializable {
 
     public boolean checkCoursesTaken(Student student, Course course) {
         for (int i = 0; i < student.coursesTaken.size(); i++)
-            if (student.coursesTaken.get(i) == course.getCRN())
+            if (student.coursesTaken.get(i) == course.getCRN()){
+                System.out.println(student.coursesTaken.get(i));
+                System.out.println(course.getCRN());
                 return true;
-
+    }
         return false;
     }
 
@@ -372,4 +377,5 @@ public class Student implements Serializable {
     public int getID() {
         return this.ID;
     }
+
 }
