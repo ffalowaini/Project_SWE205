@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.Scanner;
 
 
@@ -25,6 +26,7 @@ public class StudentUI extends Application implements EventHandler {
     private TextField userNam, crnText;
     private PasswordField pass;
     private Label messageLabel;
+    private Label[] crnLabel = new Label[4];
     private TextArea messageText;
     private Student students = new Student();
     private Course course = new Course();
@@ -149,11 +151,16 @@ public class StudentUI extends Application implements EventHandler {
             crnBox.getChildren().add(crnTextArray[i]);
 
         }
+        VBox crnLabelBox = new VBox();
+        for (int i = 0; i < crnLabel.length; i++) {
+            crnLabel[i] = new Label();
+            crnLabelBox.getChildren().add(crnLabel[i]);
+        }
         Label crnLabel = new Label("CRN: ");
         VBox centerBox = new VBox();
-        centerBox.getChildren().addAll(messageLabel, crnLabel, crnBox);
+        centerBox.getChildren().addAll(crnLabel, crnBox, crnLabelBox);
         outerLay.setCenter(centerBox);
-        centerBox.setAlignment(Pos.CENTER);
+        centerBox.setAlignment(Pos.BOTTOM_CENTER);
 
         return new Scene(outerLay, 400, 400);
     }
@@ -249,33 +256,54 @@ public class StudentUI extends Application implements EventHandler {
 
         }
 
-        int result = 0;
+        int[] result = new int[4];
         if (button.getText().equals("Add Course")) {
-
-
-            try {
-                result = students.addCourse(
-                        currentStudent.getID(),
-                        Integer.parseInt(crnTextArray[0].getText()));
-                System.out.println(result);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (NumberFormatException e) {
-                if (crnTextArray[0].getText().trim().isEmpty())
-                    messageLabel.setText("You need to write a CRN");
-
-
+            if (!(crnTextArray[0].getText().trim().isEmpty())) {
+                try {
+                    result[0] = students.addCourse(currentStudent.getID(), Integer.parseInt(crnTextArray[0].getText()));
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
+            if (!(crnTextArray[1].getText().trim().isEmpty())) {
+                try {
+                    result[1] = students.addCourse(currentStudent.getID(), Integer.parseInt(crnTextArray[1].getText()));
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (!(crnTextArray[2].getText().trim().isEmpty())) {
+                try {
+                    result[2] = students.addCourse(currentStudent.getID(), Integer.parseInt(crnTextArray[2].getText()));
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (!(crnTextArray[3].getText().trim().isEmpty())) {
+                try {
+                    result[3] = students.addCourse(currentStudent.getID(), Integer.parseInt(crnTextArray[3].getText()));
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+            for (int i = 0; i < result.length; i++) {
+                if (result[i] == 101) {
+                    crnLabel[i].setText(crnTextArray[i].getText() + " :You reached the maximum credit hours");
+                } else if (result[i] == 102) {
+                    crnLabel[i].setText(crnTextArray[i].getText() + " :The section is closed");
+                } else if (result[i] == 103) {
+                    crnLabel[i].setText(crnTextArray[i].getText() + " :Missing pre-request(s)");
 
+                } else if (result[i] == 104) {
+                    crnLabel[i].setText(crnTextArray[i].getText() + " :You have finished this course");
+                } else if (result[i] == 105) {
+                    crnLabel[i].setText(crnTextArray[i].getText() + " :Conflict in time");
 
-            if (result == 101) {
-            } else if (result == 102) {
-                System.out.println("102");
-            } else if (result == 103) {
-            } else if (result == 104) {
-            } else if (result == 105) {
-            } else {
-
+                } else if (result[i] == 106) {
+                    crnLabel[i].setText(crnTextArray[i].getText() + " :Course has been added");
+                } else if (result[i] == 107) {
+                    crnLabel[i].setText(crnTextArray[i].getText() + " :You already have this course");
+                }
             }
         }
 
@@ -283,7 +311,7 @@ public class StudentUI extends Application implements EventHandler {
         if (button.getText().equals("Log In")) {
             Student[] listStudent = null;
             try {
-
+                System.out.println(Arrays.toString(students.getStudent()));
                 listStudent = students.getStudent();
                 Course[] listCourse = students.getCourse();
             } catch (ClassNotFoundException e) {
@@ -291,19 +319,22 @@ public class StudentUI extends Application implements EventHandler {
             }
             String passwordEntered = pass.getText();
             String idEnterd = userNam.getText();
+            boolean check = false;
             try {
                 for (Student student : listStudent) {
                     if (student.getID() == Integer.parseInt(idEnterd))
                         if (student.getPassword().equals(passwordEntered)) {
                             currentStudent = student;
                             window.setScene(homeScene());
+                            check = true;
                             break;
                         }
                 }
                 //it will print anyway
-                messageLabel.setText("The username/password is incorrect");
-                messageLabel.setStyle("-fx-text-fill: Red");
-
+                if (!check) {
+                    messageLabel.setText("The username/password is incorrect");
+                    messageLabel.setStyle("-fx-text-fill: Red");
+                }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
 
@@ -332,15 +363,40 @@ public class StudentUI extends Application implements EventHandler {
                 System.out.println(e.getMessage());
             }
         }
+        boolean[] checkDelete = new boolean[4];
+        if (button.getText().equals("Drop Course")) {
+            for (int i = 0; i < crnTextArray.length; i++) {
+                if (!(crnTextArray[i].getText().trim().isEmpty())) {
+                    try {
+                        checkDelete[i] = false;
+                        checkDelete[i] = students.deleteCourse(currentStudent.getID(), Integer.parseInt(crnTextArray[i].getText()));
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            for (int i = 0; i < result.length; i++) {
+                if (!(crnTextArray[i].getText().trim().isEmpty())) {
+                    if (checkDelete[i]) {
+                        crnLabel[i].setText(crnTextArray[i].getText() + " : Has been deleted");
+                    } else {
+                        crnLabel[i].setText(crnTextArray[i].getText() + " : You don't have this course");
+                    }
+                }
+            }
+
+
+        }
 
 
         if (button.getText().equals("Send")) {
             if (messageText.getText().trim().isEmpty() || crnText.getText().trim().isEmpty())
                 messageLabel.setText("Your CRN/Message is empty");
-            else{
+            else {
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Succeed");
-                alert.setContentText("Your message ");
+                alert.setContentText("Your message has been send and it will be respond as soon as possible");
                 alert.showAndWait();
                 try {
                     window.setScene(registrationScene());
@@ -351,6 +407,7 @@ public class StudentUI extends Application implements EventHandler {
         }
     }
 
+    //to have an interaction between the button and the mouse pointer
     private void mouseAffect(Button b) {
         b.setStyle("-fx-background-color: #008000;-fx-text-fill:white");
         b.setOnMouseEntered(e -> b.setStyle("-fx-background-color: #19662d;-fx-text-fill:white"));
