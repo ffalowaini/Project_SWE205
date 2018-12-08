@@ -1,3 +1,4 @@
+package StudentSystem;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -21,6 +22,10 @@ public class Course implements Serializable{
 /**/private boolean state;  
 	//private Exam[] exams;
 	
+	public Course() {
+		
+	}
+	
 	public void addStudent (int ID) {
 		numOfStudent++;
 		studentTakeThisCourse.add(ID);
@@ -31,11 +36,22 @@ public class Course implements Serializable{
 	
 	public void deleteStudent (int ID) {
 		numOfStudent--;
-		studentTakeThisCourse.remove(ID);
+
+		for (int i =0 ; i<studentTakeThisCourse.size() ; i++)
+			if ( ID == studentTakeThisCourse.get(i))
+				studentTakeThisCourse.remove(i);
+
 		if (numOfStudent < maxNumOfStudent)
 			state = true;
 	}
-	
+	public Course (int CRN, String name, String day, int sectionNum, String time){
+		this.CRN = CRN;
+		this.name = name;
+		this.day = day;
+		this.sectionNum = sectionNum;
+		this.time = time;
+	}
+
 	public Course(int CRN, String name, int credit, String day, String instructor, int maxNumOfStudent,
 			int numOfStudent, int sectionNum, ArrayList<Integer> studentTakeThisCourse, ArrayList<Integer> preRequest, String time,
 			boolean state) {
@@ -150,7 +166,7 @@ public class Course implements Serializable{
 		this.state = state;
 	}
 	public String getInfo() {
-		return CRN + " " + name + " " + sectionNum ; 
+		return CRN + " " + name + " " + sectionNum + "  "  ; 
 	}
 	
 }

@@ -144,11 +144,11 @@ public class StudentUI extends Application implements EventHandler {
         // TableView tableView = new TableView();
 
 
-        HBox crnBox = new HBox();
+        HBox crnTextBox = new HBox();
         crnTextArray = new TextField[4];
         for (int i = 0; i < crnTextArray.length; i++) {
             crnTextArray[i] = new TextField();
-            crnBox.getChildren().add(crnTextArray[i]);
+            crnTextBox.getChildren().add(crnTextArray[i]);
 
         }
         VBox crnLabelBox = new VBox();
@@ -157,8 +157,11 @@ public class StudentUI extends Application implements EventHandler {
             crnLabelBox.getChildren().add(crnLabel[i]);
         }
         Label crnLabel = new Label("CRN: ");
+        HBox crnBox = new HBox();
+        crnBox.getChildren().add(crnLabel);
         VBox centerBox = new VBox();
-        centerBox.getChildren().addAll(crnLabel, crnBox, crnLabelBox);
+        centerBox.getChildren().addAll(crnBox, crnTextBox, crnLabelBox);
+        crnBox.setAlignment(Pos.BOTTOM_LEFT);
         outerLay.setCenter(centerBox);
         centerBox.setAlignment(Pos.BOTTOM_CENTER);
 
