@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.FileInputStream;
@@ -17,16 +18,17 @@ import java.util.Scanner;
 
 
 public class StudentUI extends Application implements EventHandler {
-    private TextField[] crnText;
+    private TextField[] crnTextArray;
     private Stage window;
     private Button logOut = new Button("Log Out");
     private Button BackButton = new Button("Back");
-    private TextField userNam;
+    private TextField userNam, crnText;
     private PasswordField pass;
     private Label messageLabel;
-    Student students = new Student();
-    Course course = new Course();
-    Student currentStudent;
+    private TextArea messageText;
+    private Student students = new Student();
+    private Course course = new Course();
+    private Student currentStudent;
 
     public static void main(String[] args) {
         launch(args);
@@ -42,6 +44,42 @@ public class StudentUI extends Application implements EventHandler {
 
     }
 
+
+    private Scene logIn() {
+        window.setTitle("Log In");
+        BackButton.setOnAction(this);
+        logOut.setOnAction(this);
+        Stage dialog = new Stage();
+
+
+        Label userName = new Label(String.format("%9s", "ID:    \t"));
+        Label password = new Label(String.format("%9s", "Password:"));
+        messageLabel = new Label();
+        userNam = new TextField();
+        pass = new PasswordField();
+
+        HBox userBox = new HBox();
+        HBox passBox = new HBox();
+        userBox.setPrefWidth(100);
+        passBox.setPrefWidth(100);
+        userBox.setAlignment(Pos.CENTER);
+        userBox.setSpacing(10);
+        passBox.setAlignment(Pos.CENTER);
+        passBox.setSpacing(10);
+        userBox.getChildren().addAll(userName, userNam);
+        passBox.getChildren().addAll(password, pass);
+        Button logInButton = new Button("Log In");
+        logInButton.setOnAction(this);
+        VBox centerBox = new VBox();
+        centerBox.setSpacing(10);
+        centerBox.getChildren().addAll(userBox, passBox, messageLabel, logInButton);
+
+
+        centerBox.setAlignment(Pos.CENTER);
+
+        return new Scene(centerBox, 400, 400);
+
+    }
 
     private Scene homeScene() throws FileNotFoundException {
         Scanner readFile = new Scanner(new FileInputStream("Menu Buttons.txt"));
@@ -63,7 +101,7 @@ public class StudentUI extends Application implements EventHandler {
         box.setSpacing(15);
         box.setPrefWidth(95);
         box.setAlignment(Pos.CENTER);
-        Label label = new Label("Heelo");
+        Label label = new Label("ID: " + currentStudent.getID());
         label.setPrefWidth(90);
         logOut.setPrefWidth(90);
         pane.setCenter(box);
@@ -72,98 +110,8 @@ public class StudentUI extends Application implements EventHandler {
         return new Scene(pane, 400, 400);
     }
 
-    private void mouseAffect(Button b) {
-        b.setStyle("-fx-background-color: #008000;-fx-text-fill:white");
-        b.setOnMouseEntered(e -> b.setStyle("-fx-background-color: #19662d;-fx-text-fill:white"));
-        b.setOnMouseExited(e -> b.setStyle("-fx-background-color: #008000;-fx-text-fill:white"));
-    }
-
-    @Override
-    public void handle(Event event) {
-        Button button = (Button) event.getSource();
-        if (button.getText().equals("Registration"))
-            try {
-                window.setScene(RegistrationScene());
-            } catch (FileNotFoundException e) {
-                System.out.println(e.getMessage());
-            }
-        if (button.getText().equals("Search Course"))
-            window.setScene(searchScene());
-        if (button.getText().equals("Approval"))
-            window.setScene(approvalScene());
-        int result = 0;
-        if (button.getText().equals("Add Course")) {
-
-            if (crnText[0].getText().trim().isEmpty()) {
-                try {
-                    result = students.addCourse(currentStudent.getID(), Integer.parseInt(crnText[0].getText()));
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (result == 101) {
-            } else if (result == 102) {
-                System.out.println("102");
-            } else if (result == 103) {
-            } else if (result == 104) {
-            } else if (result == 105) {
-            } else {
-
-            }
-        }
-
-
-        if (button.getText().equals("Log In")) {
-            Student[] listStudent = null;
-            try {
-
-                listStudent = students.getStudent();
-                Course[] listCourse = students.getCourse();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            String passwordEntered = pass.getText();
-            String idEnterd = userNam.getText();
-            try {
-                for (int i = 0; i < listStudent.length; i++) {
-                    if (listStudent[i].getID() == Integer.parseInt(idEnterd))
-                        if (listStudent[i].getPassword().equals(passwordEntered)) {
-                            currentStudent = listStudent[i];
-                            window.setScene(homeScene());
-                            break;
-                        }
-                }
-                messageLabel.setText("The username/password is incorrect");
-                messageLabel.setStyle("-fx-text-fill: Red");
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-
-
-            } catch (NumberFormatException ex) {
-                messageLabel.setText("The user name must be an integer");
-                messageLabel.setStyle("-fx-text-fill: Red");
-            }
-
-
-        }
-
-        //To change scene to Home scene from the Registration scene
-        if (button.getText().
-
-                equals("Back") && window.getTitle().
-
-                equals("Registration")) {
-            try {
-                window.setScene(homeScene());
-            } catch (FileNotFoundException e) {
-                System.out.println(e.getMessage());
-            }
-        }
-
-    }
-
-    private Scene RegistrationScene() throws FileNotFoundException {
+    private Scene registrationScene() throws FileNotFoundException {
+        messageLabel.setText("");
         BackButton.setOnAction(this);
         logOut.setOnAction(this);
         BackButton.setPrefWidth(80);
@@ -195,15 +143,15 @@ public class StudentUI extends Application implements EventHandler {
 
 
         HBox crnBox = new HBox();
-        crnText = new TextField[4];
-        for (int i = 0; i < crnText.length; i++) {
-            crnText[i] = new TextField();
-            crnBox.getChildren().add(crnText[i]);
+        crnTextArray = new TextField[4];
+        for (int i = 0; i < crnTextArray.length; i++) {
+            crnTextArray[i] = new TextField();
+            crnBox.getChildren().add(crnTextArray[i]);
 
         }
         Label crnLabel = new Label("CRN: ");
         VBox centerBox = new VBox();
-        centerBox.getChildren().addAll(crnLabel, crnBox);
+        centerBox.getChildren().addAll(messageLabel, crnLabel, crnBox);
         outerLay.setCenter(centerBox);
         centerBox.setAlignment(Pos.CENTER);
 
@@ -253,20 +201,20 @@ public class StudentUI extends Application implements EventHandler {
         hBox.setAlignment(Pos.TOP_RIGHT);
         Label crnLabel = new Label("CRN:");
         crnLabel.setPrefWidth(60);
-        TextField crnText = new TextField();
+        crnText = new TextField();
         crnText.setPrefWidth(200);
-        Label messageLabel = new Label("Message:");
-        messageLabel.setPrefWidth(60);
-        TextArea messageText = new TextArea();
+        Label messageLabelLoc = new Label("Message:");
+        messageLabelLoc.setPrefWidth(60);
+        messageText = new TextArea();
         messageText.setPrefWidth(300);
         HBox crnBox = new HBox();
         HBox messBox = new HBox();
         crnBox.getChildren().addAll(crnLabel, crnText);
-        messBox.getChildren().addAll(messageLabel, messageText);
+        messBox.getChildren().addAll(messageLabelLoc, messageText);
 
         VBox centerBox = new VBox();
         centerBox.setSpacing(20);
-        centerBox.getChildren().addAll(crnBox, messBox);
+        centerBox.getChildren().addAll(crnBox, messBox, messageLabel);
         centerBox.setAlignment(Pos.CENTER_LEFT);
         Button sendButton = new Button("Send");
         sendButton.setOnAction(this);
@@ -276,33 +224,137 @@ public class StudentUI extends Application implements EventHandler {
         return new Scene(outerLay, 400, 400);
     }
 
-    private Scene logIn() {
-        window.setTitle("Log In");
-        BackButton.setOnAction(this);
-        logOut.setOnAction(this);
-
-        Label userName = new Label("ID: ");
-        Label password = new Label("Password:");
-        messageLabel = new Label();
-        userNam = new TextField();
-        pass = new PasswordField();
-
-        HBox userBox = new HBox();
-        HBox passBox = new HBox();
-        userBox.setAlignment(Pos.CENTER);
-        passBox.setAlignment(Pos.CENTER);
-        userBox.getChildren().addAll(userName, userNam);
-        passBox.getChildren().addAll(password, pass);
-        Button logInButton = new Button("Log In");
-        logInButton.setOnAction(this);
-        VBox centerBox = new VBox();
-        centerBox.getChildren().addAll(userBox, passBox, messageLabel, logInButton);
+    @Override
+    public void handle(Event event) {
 
 
-        centerBox.setAlignment(Pos.CENTER);
+        Button button = (Button) event.getSource();
 
-        return new Scene(centerBox, 400, 400);
+        //to Change the scene from The home scene to the registration scene
+        if (button.getText().equals("Registration"))
+            try {
+                window.setScene(registrationScene());
+            } catch (FileNotFoundException e) {
+                System.out.println(e.getMessage());
+            }
+        //to Change the scene from The registration scene to the search course scene
+        if (button.getText().equals("Search Course"))
+            window.setScene(searchScene());
+        //to Change the scene from The registration scene to the Approval scene
+        if (button.getText().equals("Approval"))
+            window.setScene(approvalScene());
+        //to Change the scene to the log in scene
+        if (button.getText().equals("Log Out")) {
+            window.setScene(logIn());
 
+        }
+
+        int result = 0;
+        if (button.getText().equals("Add Course")) {
+
+
+            try {
+                result = students.addCourse(
+                        currentStudent.getID(),
+                        Integer.parseInt(crnTextArray[0].getText()));
+                System.out.println(result);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (NumberFormatException e) {
+                if (crnTextArray[0].getText().trim().isEmpty())
+                    messageLabel.setText("You need to write a CRN");
+
+
+            }
+
+
+            if (result == 101) {
+            } else if (result == 102) {
+                System.out.println("102");
+            } else if (result == 103) {
+            } else if (result == 104) {
+            } else if (result == 105) {
+            } else {
+
+            }
+        }
+
+
+        if (button.getText().equals("Log In")) {
+            Student[] listStudent = null;
+            try {
+
+                listStudent = students.getStudent();
+                Course[] listCourse = students.getCourse();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            String passwordEntered = pass.getText();
+            String idEnterd = userNam.getText();
+            try {
+                for (Student student : listStudent) {
+                    if (student.getID() == Integer.parseInt(idEnterd))
+                        if (student.getPassword().equals(passwordEntered)) {
+                            currentStudent = student;
+                            window.setScene(homeScene());
+                            break;
+                        }
+                }
+                //it will print anyway
+                messageLabel.setText("The username/password is incorrect");
+                messageLabel.setStyle("-fx-text-fill: Red");
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+
+
+            } catch (NumberFormatException ex) {
+                messageLabel.setText("The username must be an integer");
+                messageLabel.setStyle("-fx-text-fill: Red");
+            }
+
+
+        }
+
+        //To change scene to Home scene from the Registration scene
+        if (button.getText().equals("Back") && window.getTitle().equals("Registration")) {
+            try {
+                window.setScene(homeScene());
+            } catch (FileNotFoundException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        //To change scene to Registration scene from the Search Course scene
+        if (button.getText().equals("Back") && window.getTitle().equals("Search Course") || button.getText().equals("Back") && window.getTitle().equals("Approval")) {
+            try {
+                window.setScene(registrationScene());
+            } catch (FileNotFoundException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+
+        if (button.getText().equals("Send")) {
+            if (messageText.getText().trim().isEmpty() || crnText.getText().trim().isEmpty())
+                messageLabel.setText("Your CRN/Message is empty");
+            else{
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Succeed");
+                alert.setContentText("Your message ");
+                alert.showAndWait();
+                try {
+                    window.setScene(registrationScene());
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void mouseAffect(Button b) {
+        b.setStyle("-fx-background-color: #008000;-fx-text-fill:white");
+        b.setOnMouseEntered(e -> b.setStyle("-fx-background-color: #19662d;-fx-text-fill:white"));
+        b.setOnMouseExited(e -> b.setStyle("-fx-background-color: #008000;-fx-text-fill:white"));
     }
 }
 
