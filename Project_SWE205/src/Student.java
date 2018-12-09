@@ -1,3 +1,4 @@
+
 package StudentSystem;
 
 import java.io.*;
@@ -112,19 +113,19 @@ public class Student implements Serializable {
         }
 
         if (checkCredit(listStudent[indexOfStudent], listCourse[indexOfCourse]))
-            return 101; // maximum credit mistake num
+            return 101; // maximum credit
 
         else if (checkState(listStudent[indexOfStudent], listCourse[indexOfCourse]))
             return 102; // section close
 
         else if (checkPreRequst(listStudent[indexOfStudent], listCourse[indexOfCourse]))
-            return 103; // did not take all the pre requst
+            return 103; // did not take all the prerequisite
 
         else if (checkCoursesTaken(listStudent[indexOfStudent], listCourse[indexOfCourse]))
-            return 104; // course was taken befor
+            return 104; // course was taken before
 
         else if (checkTime(listStudent[indexOfStudent], listCourse[indexOfCourse], listCourse)) {
-            return 105; // time confilct
+            return 105; // time conflict
         }
         else if (checkCurrentCourse(listStudent[indexOfStudent], listCourse[indexOfCourse])) {
             return 107; // courses was added
@@ -192,19 +193,22 @@ public class Student implements Serializable {
 
     }
 
-
+    //this method to check if the student reach the maximum hours or not
     public boolean checkCredit(Student student, Course course) {
         if (student.creditHours + course.getCredit() > student.maxHours)
             return true;
         return false;
     }
-
+    
+    
+    //this method to check for the course is it open or close 
     public boolean checkState(Student student, Course course) {
         if (!(course.getState()))
             return true;
         return false;
     }
-
+    
+    //this method to check the all prerequisite courses for a certain course .. if the student took it or not
     public boolean checkPreRequst(Student student, Course course) {
         ArrayList<Integer> preRequst = new ArrayList<Integer>();
         preRequst = course.getPreRequest();
@@ -223,7 +227,7 @@ public class Student implements Serializable {
         return false;
     }
 
-
+    //this method to check all the courses taken by a student
     public boolean checkCoursesTaken(Student student, Course course) {
         for (int i = 0; i < student.coursesTaken.size(); i++)
             if (student.coursesTaken.get(i) == course.getCRN()){
@@ -233,7 +237,8 @@ public class Student implements Serializable {
     }
         return false;
     }
-
+    
+    //this method to check the courses taken by a student in the current term
     public boolean checkCurrentCourse(Student student, Course course) {
         for (int i = 0; i < student.currentCourses.size(); i++)
             if (student.currentCourses.get(i) == course.getCRN())
@@ -241,6 +246,8 @@ public class Student implements Serializable {
 
         return false;
     }
+    
+    //this method to check the time conflict
     public boolean checkTime(Student student, Course course, Course[] coursesArray) {
         String time = course.getTime();
         String day = course.getDay();
